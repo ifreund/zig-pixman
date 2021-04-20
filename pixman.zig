@@ -504,26 +504,27 @@ pub const Indexed = extern struct {
 };
 
 fn format(
-    comptime bpp: comptime_int,
-    comptime kind: comptime_int,
-    comptime a: comptime_int,
-    comptime r: comptime_int,
-    comptime g: comptime_int,
-    comptime b: comptime_int,
+    comptime bpp: u32,
+    comptime _type: Type,
+    comptime a: u32,
+    comptime r: u32,
+    comptime g: u32,
+    comptime b: u32,
 ) comptime_int {
-    return (bpp << 24) | (kind << 16) | (a << 12) | (r << 8) | (g << 4) | b;
+    return (bpp << 24) | (@as(u32, @enumToInt(_type)) << 16) |
+        (a << 12) | (r << 8) | (g << 4) | b;
 }
 
 fn formatByte(
-    comptime bpp: comptime_int,
-    comptime kind: comptime_int,
-    comptime a: comptime_int,
-    comptime r: comptime_int,
-    comptime g: comptime_int,
-    comptime b: comptime_int,
+    comptime bpp: u32,
+    comptime _type: Type,
+    comptime a: u32,
+    comptime r: u32,
+    comptime g: u32,
+    comptime b: u32,
 ) comptime_int {
     return ((bpp >> 3) << 24) |
-        (3 << 22) | (kind << 16) |
+        (3 << 22) | (@as(u32, @enumToInt(_type)) << 16) |
         ((a >> 3) << 12) |
         ((r >> 3) << 8) |
         ((g >> 3) << 4) |
@@ -531,95 +532,95 @@ fn formatByte(
 }
 
 /// These are the PIXMAN_TYPE_FOO defines
-const kind = struct {
-    const other = 0;
-    const a = 1;
-    const argb = 2;
-    const abgr = 3;
-    const color = 4;
-    const gray = 5;
-    const yuy2 = 6;
-    const yv12 = 7;
-    const bgra = 8;
-    const rgba = 9;
-    const argb_srgb = 10;
-    const rgba_float = 11;
+pub const Type = enum {
+    other = 0,
+    a = 1,
+    argb = 2,
+    abgr = 3,
+    color = 4,
+    gray = 5,
+    yuy2 = 6,
+    yv12 = 7,
+    bgra = 8,
+    rgba = 9,
+    argb_srgb = 10,
+    rgba_float = 11,
 };
 
 pub const FormatCode = extern enum {
     // 128bpp formats
-    rgba_float = formatByte(128, kind.rgba_float, 32, 32, 32, 32),
+    rgba_float = formatByte(128, .rgba_float, 32, 32, 32, 32),
     // 96bpp formats
-    rgb_float = formatByte(96, kind.rgba_float, 0, 32, 32, 32),
+    rgb_float = formatByte(96, .rgba_float, 0, 32, 32, 32),
 
     // 32bpp formats
-    a8r8g8b8 = format(32, kind.argb, 8, 8, 8, 8),
-    x8r8g8b8 = format(32, kind.argb, 0, 8, 8, 8),
-    a8b8g8r8 = format(32, kind.abgr, 8, 8, 8, 8),
-    x8b8g8r8 = format(32, kind.abgr, 0, 8, 8, 8),
-    b8g8r8a8 = format(32, kind.bgra, 8, 8, 8, 8),
-    b8g8r8x8 = format(32, kind.bgra, 0, 8, 8, 8),
-    r8g8b8a8 = format(32, kind.rgba, 8, 8, 8, 8),
-    r8g8b8x8 = format(32, kind.rgba, 0, 8, 8, 8),
-    x14r6g6b6 = format(32, kind.argb, 0, 6, 6, 6),
-    x2r10g10b10 = format(32, kind.argb, 0, 10, 10, 10),
-    a2r10g10b10 = format(32, kind.argb, 2, 10, 10, 10),
-    x2b10g10r10 = format(32, kind.abgr, 0, 10, 10, 10),
-    a2b10g10r10 = format(32, kind.abgr, 2, 10, 10, 10),
+    a8r8g8b8 = format(32, .argb, 8, 8, 8, 8),
+    x8r8g8b8 = format(32, .argb, 0, 8, 8, 8),
+    a8b8g8r8 = format(32, .abgr, 8, 8, 8, 8),
+    x8b8g8r8 = format(32, .abgr, 0, 8, 8, 8),
+    b8g8r8a8 = format(32, .bgra, 8, 8, 8, 8),
+    b8g8r8x8 = format(32, .bgra, 0, 8, 8, 8),
+    r8g8b8a8 = format(32, .rgba, 8, 8, 8, 8),
+    r8g8b8x8 = format(32, .rgba, 0, 8, 8, 8),
+    x14r6g6b6 = format(32, .argb, 0, 6, 6, 6),
+    x2r10g10b10 = format(32, .argb, 0, 10, 10, 10),
+    a2r10g10b10 = format(32, .argb, 2, 10, 10, 10),
+    x2b10g10r10 = format(32, .abgr, 0, 10, 10, 10),
+    a2b10g10r10 = format(32, .abgr, 2, 10, 10, 10),
 
     // sRGB formats
-    a8r8g8b8_sRGB = format(32, kind.argb_srgb, 8, 8, 8, 8),
+    a8r8g8b8_sRGB = format(32, .argb_srgb, 8, 8, 8, 8),
 
     // 24bpp formats
-    r8g8b8 = format(24, kind.argb, 0, 8, 8, 8),
-    b8g8r8 = format(24, kind.abgr, 0, 8, 8, 8),
+    r8g8b8 = format(24, .argb, 0, 8, 8, 8),
+    b8g8r8 = format(24, .abgr, 0, 8, 8, 8),
 
     // 16bpp formats
-    r5g6b5 = format(16, kind.argb, 0, 5, 6, 5),
-    b5g6r5 = format(16, kind.abgr, 0, 5, 6, 5),
+    r5g6b5 = format(16, .argb, 0, 5, 6, 5),
+    b5g6r5 = format(16, .abgr, 0, 5, 6, 5),
 
-    a1r5g5b5 = format(16, kind.argb, 1, 5, 5, 5),
-    x1r5g5b5 = format(16, kind.argb, 0, 5, 5, 5),
-    a1b5g5r5 = format(16, kind.abgr, 1, 5, 5, 5),
-    x1b5g5r5 = format(16, kind.abgr, 0, 5, 5, 5),
-    a4r4g4b4 = format(16, kind.argb, 4, 4, 4, 4),
-    x4r4g4b4 = format(16, kind.argb, 0, 4, 4, 4),
-    a4b4g4r4 = format(16, kind.abgr, 4, 4, 4, 4),
-    x4b4g4r4 = format(16, kind.abgr, 0, 4, 4, 4),
+    a1r5g5b5 = format(16, .argb, 1, 5, 5, 5),
+    x1r5g5b5 = format(16, .argb, 0, 5, 5, 5),
+    a1b5g5r5 = format(16, .abgr, 1, 5, 5, 5),
+    x1b5g5r5 = format(16, .abgr, 0, 5, 5, 5),
+    a4r4g4b4 = format(16, .argb, 4, 4, 4, 4),
+    x4r4g4b4 = format(16, .argb, 0, 4, 4, 4),
+    a4b4g4r4 = format(16, .abgr, 4, 4, 4, 4),
+    x4b4g4r4 = format(16, .abgr, 0, 4, 4, 4),
 
     // 8bpp formats
-    a8 = format(8, kind.a, 8, 0, 0, 0),
-    r3g3b2 = format(8, kind.argb, 0, 3, 3, 2),
-    b2g3r3 = format(8, kind.abgr, 0, 3, 3, 2),
-    a2r2g2b2 = format(8, kind.argb, 2, 2, 2, 2),
-    a2b2g2r2 = format(8, kind.abgr, 2, 2, 2, 2),
+    a8 = format(8, .a, 8, 0, 0, 0),
+    r3g3b2 = format(8, .argb, 0, 3, 3, 2),
+    b2g3r3 = format(8, .abgr, 0, 3, 3, 2),
+    a2r2g2b2 = format(8, .argb, 2, 2, 2, 2),
+    a2b2g2r2 = format(8, .abgr, 2, 2, 2, 2),
 
-    c8 = format(8, kind.color, 0, 0, 0, 0),
-    g8 = format(8, kind.gray, 0, 0, 0, 0),
+    c8 = format(8, .color, 0, 0, 0, 0),
+    g8 = format(8, .gray, 0, 0, 0, 0),
 
-    x4a4 = format(8, kind.a, 4, 0, 0, 0),
+    x4a4 = format(8, .a, 4, 0, 0, 0),
 
-    x4c4 = format(8, kind.color, 0, 0, 0, 0),
-    x4g4 = format(8, kind.gray, 0, 0, 0, 0),
+    x4c4 = format(8, .color, 0, 0, 0, 0),
+    x4g4 = format(8, .gray, 0, 0, 0, 0),
 
     // 4bpp formats
-    a4 = format(4, kind.a, 4, 0, 0, 0),
-    r1g2b1 = format(4, kind.argb, 0, 1, 2, 1),
-    b1g2r1 = format(4, kind.abgr, 0, 1, 2, 1),
-    a1r1g1b1 = format(4, kind.argb, 1, 1, 1, 1),
-    a1b1g1r1 = format(4, kind.abgr, 1, 1, 1, 1),
+    a4 = format(4, .a, 4, 0, 0, 0),
+    r1g2b1 = format(4, .argb, 0, 1, 2, 1),
+    b1g2r1 = format(4, .abgr, 0, 1, 2, 1),
+    a1r1g1b1 = format(4, .argb, 1, 1, 1, 1),
+    a1b1g1r1 = format(4, .abgr, 1, 1, 1, 1),
 
-    c4 = format(4, kind.color, 0, 0, 0, 0),
-    g4 = format(4, kind.gray, 0, 0, 0, 0),
+    c4 = format(4, .color, 0, 0, 0, 0),
+    g4 = format(4, .gray, 0, 0, 0, 0),
 
     // 1bpp formats
-    a1 = format(1, kind.a, 1, 0, 0, 0),
+    a1 = format(1, .a, 1, 0, 0, 0),
 
-    g1 = format(1, kind.gray, 0, 0, 0, 0),
+    g1 = format(1, .gray, 0, 0, 0, 0),
 
     // YUV formats
-    yuy2 = format(16, kind.yuy2, 0, 0, 0, 0),
-    yv12 = format(12, kind.yv12, 0, 0, 0, 0),
+    yuy2 = format(16, .yuy2, 0, 0, 0, 0),
+    yv12 = format(12, .yv12, 0, 0, 0, 0),
 
     extern fn pixman_format_supported_destination(format: FormatCode) Bool;
     pub fn supportedDestination(format: FormatCode) bool {
