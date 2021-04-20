@@ -1,4 +1,4 @@
-pub const Bool = c_int;
+const Bool = c_int;
 
 pub const Fixed_32_32 = extern enum(i64) { _ };
 pub const Fixed_48_16 = extern enum(i64) { _ };
@@ -28,52 +28,78 @@ pub const Transform = extern struct {
     pub const initIdentity = pixman_transform_init_identity;
 
     extern fn pixman_transform_point_3d(transform: *const Transform, vector: *Vector) Bool;
-    pub const point3d = pixman_transform_point_3d;
+    pub fn point3d(transform: *const Transform, vector: *Vector) bool {
+        return pixman_transform_point_3d(transform, vector) != 0;
+    }
 
     extern fn pixman_transform_point(transform: *const Transform, vector: *Vector) Bool;
-    pub const point = pixman_transform_point;
+    pub fn point(transform: *const Transform, vector: *Vector) bool {
+        return pixman_transform_point(transform, vector) != 0;
+    }
 
     extern fn pixman_transform_multiply(dst: *Transform, l: *const Transform, r: *const Transform) Bool;
-    pub const multiply = pixman_transform_multiply;
+    pub fn multiply(dst: *Transform, l: *const Transform, r: *const Transform) bool {
+        return pixman_transform_multiply(dst, l, r) != 0;
+    }
 
     extern fn pixman_transform_init_scale(t: *Transform, sx: Fixed, sy: Fixed) void;
     pub const initScale = pixman_transform_init_scale;
 
     extern fn pixman_transform_scale(forward: *Transform, reverse: *Transform, sx: Fixed, sy: Fixed) Bool;
-    pub const scale = pixman_transform_scale;
+    pub fn scale(forward: *Transform, reverse: *Transform, sx: Fixed, sy: Fixed) bool {
+        return pixman_transform_scale(forward, reverse, sx, sy) != 0;
+    }
 
     extern fn pixman_transform_init_rotate(t: *Transform, cos: Fixed, sin: Fixed) void;
     pub const initRotate = pixman_transform_init_rotate;
 
     extern fn pixman_transform_rotate(forward: *Transform, reverse: *Transform, c: Fixed, s: Fixed) Bool;
-    pub const rotate = pixman_transform_rotate;
+    pub fn rotate(forward: *Transform, reverse: *Transform, c: Fixed, s: Fixed) bool {
+        return pixman_transform_rotate(forward, reverse, c, s) != 0;
+    }
 
     extern fn pixman_transform_init_translate(t: *Transform, tx: Fixed, ty: Fixed) void;
     pub const initTranslate = pixman_transform_init_translate;
 
     extern fn pixman_transform_translate(forward: *Transform, reverse: *Transform, tx: Fixed, ty: Fixed) Bool;
-    pub const translate = pixman_transform_translate;
+    pub fn translate(forward: *Transform, reverse: *Transform, tx: Fixed, ty: Fixed) bool {
+        return pixman_transform_translate(forward, reverse, tx, ty) != 0;
+    }
 
     extern fn pixman_transform_bounds(matrix: *const Transform, b: *Box16) Bool;
-    pub const bounds = pixman_transform_bounds;
+    pub fn bounds(matrix: *const Transform, b: *Box16) bool {
+        return pixman_transform_bounds(matrix, b) != 0;
+    }
 
     extern fn pixman_transform_invert(dst: *Transform, src: *const Transform) Bool;
-    pub const invert = pixman_transform_invert;
+    pub fn invert(dst: *Transform, src: *const Transform) bool {
+        return pixman_transform_invert(dst, src) != 0;
+    }
 
     extern fn pixman_transform_is_identity(t: *const Transform) Bool;
-    pub const isIdentity = pixman_transform_is_identity;
+    pub fn isIdentity(t: *const Transform) bool {
+        return pixman_transform_is_identity(t) != 0;
+    }
 
     extern fn pixman_transform_is_scale(t: *const Transform) Bool;
-    pub const isScale = pixman_transform_is_scale;
+    pub fn isScale(t: *const Transform) bool {
+        return pixman_transform_is_scale(t) != 0;
+    }
 
     extern fn pixman_transform_is_int_translate(t: *const Transform) Bool;
-    pub const isIntTranslate = pixman_transform_is_int_translate;
+    pub fn isIntTranslate(t: *const Transform) bool {
+        return pixman_transform_is_int_translate(t) != 0;
+    }
 
     extern fn pixman_transform_is_inverse(a: *const Transform, b: *const Transform) Bool;
-    pub const isInverse = pixman_transform_is_inverse;
+    pub fn isInverse(a: *const Transform, b: *const Transform) bool {
+        return pixman_transform_is_inverse(a, b) != 0;
+    }
 
     extern fn pixman_transform_from_pixman_f_transform(t: *Transform, ft: *const FTransform) Bool;
-    pub const fromFTransform = pixman_transform_from_pixman_f_transform;
+    pub fn fromFTransform(t: *Transform, ft: *const FTransform) bool {
+        return pixman_transform_from_pixman_f_transform(t, ft) != 0;
+    }
 };
 
 pub const FVector = extern struct {
@@ -87,10 +113,14 @@ pub const FTransform = extern struct {
     pub const fromPixmanTransform = pixman_f_transform_from_pixman_transform;
 
     extern fn pixman_f_transform_invert(dst: *FTransform, src: *const FTransform) Bool;
-    pub const invert = pixman_f_transform_invert;
+    pub fn invert(dst: *FTransform, src: *const FTransform) bool {
+        return pixman_f_transform_invert(dst, src) != 0;
+    }
 
     extern fn pixman_f_transform_point(t: *const FTransform, v: FVector) Bool;
-    pub const point = pixman_f_transform_point;
+    pub fn point(t: *const FTransform, v: FVector) bool {
+        return pixman_f_transform_point(t, v) != 0;
+    }
 
     extern fn pixman_f_transform_point_3d(t: *const FTransform, v: FVector) void;
     pub const point3d = pixman_f_transform_point_3d;
@@ -102,22 +132,30 @@ pub const FTransform = extern struct {
     pub const initScale = pixman_f_transform_init_scale;
 
     extern fn pixman_f_transform_scale(forward: *FTransform, reverse: *FTransform, sx: f64, sy: f64) Bool;
-    pub const scale = pixman_f_transform_scale;
+    pub fn scale(forward: *FTransform, reverse: *FTransform, sx: f64, sy: f64) bool {
+        return pixman_f_transform_scale(forward, reverse, sx, sy) != 0;
+    }
 
     extern fn pixman_f_transform_init_rotate(t: *FTransform, cos: f64, sin: f64) void;
     pub const initRotate = pixman_f_transform_init_rotate;
 
     extern fn pixman_f_transform_rotate(forward: *FTransform, reverse: *FTransform, c: f64, s: f64) Bool;
-    pub const rotate = pixman_f_transform_rotate;
+    pub fn rotate(forward: *FTransform, reverse: *FTransform, c: f64, s: f64) bool {
+        return pixman_f_transform_rotate(forward, reverse, c, s) != 0;
+    }
 
     extern fn pixman_f_transform_init_translate(t: *FTransform, tx: f64, ty: f64) void;
     pub const initTranslate = pixman_f_transform_init_translate;
 
     extern fn pixman_f_transform_translate(forward: *FTransform, reverse: *FTransform, tx: f64, ty: f64) Bool;
-    pub const translate = pixman_f_transform_translate;
+    pub fn translate(forward: *FTransform, reverse: *FTransform, tx: f64, ty: f64) bool {
+        return pixman_f_transform_translate(forward, reverse, tx, ty) != 0;
+    }
 
     extern fn pixman_f_transform_bounds(t: *const FTransform, b: *Box16) Bool;
-    pub const bounds = pixman_f_transform_bounds;
+    pub fn bounds(t: *const FTransform, b: *Box16) bool {
+        return pixman_f_transform_bounds(t, b) != 0;
+    }
 
     extern fn pixman_f_transform_init_identity(t: *FTransform) void;
     pub const initIdentity = pixman_f_transform_init_identity;
@@ -161,7 +199,9 @@ pub const Region16 = extern struct {
     pub const initRect = pixman_region_init_rect;
 
     extern fn pixman_region_init_rects(region: *Region16, boxes: *const Box16, count: c_int) Bool;
-    pub const initRects = pixman_region_init_rects;
+    pub fn initRects(region: *Region16, boxes: *const Box16, count: c_int) bool {
+        return pixman_region_init_rects(region, boxes, count) != 0;
+    }
 
     extern fn pixman_region_init_with_extents(region: *Region16, extents: *Box16) void;
     pub const initWithExtents = pixman_region_init_with_extents;
@@ -177,34 +217,52 @@ pub const Region16 = extern struct {
     pub const translate = pixman_region_translate;
 
     extern fn pixman_region_copy(dest: *Region16, source: *Region16) Bool;
-    pub const copy = pixman_region_copy;
+    pub fn copy(dest: *Region16, source: *Region16) bool {
+        return pixman_region_copy(dest, source) != 0;
+    }
 
     extern fn pixman_region_intersect(new_reg: *Region16, reg1: *Region16, reg2: *Region16) Bool;
-    pub const intersect = pixman_region_intersect;
+    pub fn intersect(new_reg: *Region16, reg1: *Region16, reg2: *Region16) bool {
+        return pixman_region_intersect(new_reg, reg1, reg2) != 0;
+    }
 
     extern fn pixman_region_union(new_reg: *Region16, reg1: *Region16, reg2: *Region16) Bool;
-    pub const @"union" = pixman_region_union;
+    pub fn @"union"(new_reg: *Region16, reg1: *Region16, reg2: *Region16) bool {
+        return pixman_region_union(new_reg, reg1, reg2) != 0;
+    }
 
     extern fn pixman_region_union_rect(dest: *Region16, source: *Region16, x: c_int, y: c_int, width: c_uint, height: c_uint) Bool;
-    pub const unionRect = pixman_region_union_rect;
+    pub fn unionRect(dest: *Region16, source: *Region16, x: c_int, y: c_int, width: c_uint, height: c_uint) bool {
+        return pixman_region_union_rect(dest, source, x, y, width, height) != 0;
+    }
 
     extern fn pixman_region_intersect_rect(dest: *Region16, source: *Region16, x: c_int, y: c_int, width: c_uint, height: c_uint) Bool;
-    pub const intersectRect = pixman_region_intersect_rect;
+    pub fn intersectRect(dest: *Region16, source: *Region16, x: c_int, y: c_int, width: c_uint, height: c_uint) bool {
+        return pixman_region_intersect_rect(dest, source, x, y, width, height) != 0;
+    }
 
     extern fn pixman_region_subtract(reg_d: *Region16, reg_m: *Region16, reg_s: *Region16) Bool;
-    pub const subtract = pixman_region_subtract;
+    pub fn subtract(reg_d: *Region16, reg_m: *Region16, reg_s: *Region16) bool {
+        return pixman_region_subtract(reg_d, reg_m, reg_s) != 0;
+    }
 
     extern fn pixman_region_inverse(new_reg: *Region16, reg1: *Region16, inv_rect: *Box16) Bool;
-    pub const inverse = pixman_region_inverse;
+    pub fn inverse(new_reg: *Region16, reg1: *Region16, inv_rect: *Box16) bool {
+        return pixman_region_inverse(new_reg, reg1, inv_rect) != 0;
+    }
 
     extern fn pixman_region_contains_point(region: *Region16, x: c_int, y: c_int, box: *Box16) Bool;
-    pub const containsPoint = pixman_region_contains_point;
+    pub fn containsPoint(region: *Region16, x: c_int, y: c_int, box: *Box16) bool {
+        return pixman_region_contains_point(region, x, y, box) != 0;
+    }
 
     extern fn pixman_region_contains_rectangle(region: *Region16, prect: *Box16) RegionOverlap;
     pub const containsRectangle = pixman_region_contains_rectangle;
 
     extern fn pixman_region_not_empty(region: *Region16) Bool;
-    pub const notEmpty = pixman_region_not_empty;
+    pub fn notEmpty(region: *Region16) bool {
+        return pixman_region_not_empty(region) != 0;
+    }
 
     extern fn pixman_region_extents(region: *Region16) *Box16;
     pub const extents = pixman_region_extents;
@@ -216,10 +274,14 @@ pub const Region16 = extern struct {
     pub const rectangles = pixman_region_rectangles;
 
     extern fn pixman_region_equal(region1: *Region16, region2: *Region16) Bool;
-    pub const equal = pixman_region_equal;
+    pub fn equal(region1: *Region16, region2: *Region16) bool {
+        return pixman_region_equal(region1, region2) != 0;
+    }
 
     extern fn pixman_region_selfcheck(region: *Region16) Bool;
-    pub const selfcheck = pixman_region_selfcheck;
+    pub fn selfcheck(region: *Region16) bool {
+        return pixman_region_selfcheck(region) != 0;
+    }
 
     extern fn pixman_region_reset(region: *Region16, box: *Box16) void;
     pub const reset = pixman_region_reset;
@@ -260,7 +322,9 @@ pub const Region32 = extern struct {
     pub const initRect = pixman_region32_init_rect;
 
     extern fn pixman_region32_init_rects(region: *Region32, boxes: *const Box32, count: c_int) Bool;
-    pub const initRects = pixman_region32_init_rects;
+    pub fn initRects(region: *Region32, boxes: *const Box32, count: c_int) bool {
+        return pixman_region32_init_rects(region, boxes, count) != 0;
+    }
 
     extern fn pixman_region32_init_with_extents(region: *Region32, extents: *Box32) void;
     pub const initWithExtents = pixman_region32_init_with_extents;
@@ -275,34 +339,52 @@ pub const Region32 = extern struct {
     pub const translate = pixman_region32_translate;
 
     extern fn pixman_region32_copy(dest: *Region32, source: *Region32) Bool;
-    pub const copy = pixman_region32_copy;
+    pub fn copy(dest: *Region32, source: *Region32) bool {
+        return pixman_region32_copy(dest, source) != 0;
+    }
 
     extern fn pixman_region32_intersect(new_reg: *Region32, reg1: *Region32, reg2: *Region32) Bool;
-    pub const intersect = pixman_region32_intersect;
+    pub fn intersect(new_reg: *Region32, reg1: *Region32, reg2: *Region32) bool {
+        return pixman_region32_intersect(new_reg, reg1, reg2) != 0;
+    }
 
     extern fn pixman_region32_union(new_reg: *Region32, reg1: *Region32, reg2: *Region32) Bool;
-    pub const @"union" = pixman_region32_union;
+    pub fn @"union"(new_reg: *Region32, reg1: *Region32, reg2: *Region32) bool {
+        return pixman_region32_union(new_reg, reg1, reg2) != 0;
+    }
 
     extern fn pixman_region32_intersect_rect(dest: *Region32, source: *Region32, x: c_int, y: c_int, width: c_uint, height: c_uint) Bool;
-    pub const intersectRect = pixman_region32_intersect_rect;
+    pub fn intersectRect(dest: *Region32, source: *Region32, x: c_int, y: c_int, width: c_uint, height: c_uint) bool {
+        return pixman_region32_intersect_rect(dest, source, x, y, width, height) != 0;
+    }
 
     extern fn pixman_region32_union_rect(dest: *Region32, source: *Region32, x: c_int, y: c_int, width: c_uint, height: c_uint) Bool;
-    pub const unionRect = pixman_region32_union_rect;
+    pub fn unionRect(dest: *Region32, source: *Region32, x: c_int, y: c_int, width: c_uint, height: c_uint) bool {
+        return pixman_region32_union_rect(dest, source, x, y, width, height) != 0;
+    }
 
     extern fn pixman_region32_subtract(reg_d: *Region32, reg_m: *Region32, reg_s: *Region32) Bool;
-    pub const subtract = pixman_region32_subtract;
+    pub fn subtract(reg_d: *Region32, reg_m: *Region32, reg_s: *Region32) bool {
+        return pixman_region32_subtract(reg_d, reg_m, reg_s) != 0;
+    }
 
     extern fn pixman_region32_inverse(new_reg: *Region32, reg1: *Region32, inv_rect: *Box32) Bool;
-    pub const inverse = pixman_region32_inverse;
+    pub fn inverse(new_reg: *Region32, reg1: *Region32, inv_rect: *Box32) bool {
+        return pixman_region32_inverse(new_reg, reg1, inv_rect) != 0;
+    }
 
     extern fn pixman_region32_contains_point(region: *Region32, x: c_int, y: c_int, box: *Box32) Bool;
-    pub const containsPoint = pixman_region32_contains_point;
+    pub fn containsPoint(region: *Region32, x: c_int, y: c_int, box: *Box32) bool {
+        return pixman_region32_contains_point(region, x, y, box) != 0;
+    }
 
     extern fn pixman_region32_contains_rectangle(region: *Region32, prect: *Box32) RegionOverlap;
     pub const containsRectangle = pixman_region32_contains_rectangle;
 
     extern fn pixman_region32_not_empty(region: *Region32) Bool;
-    pub const notEmpty = pixman_region32_not_empty;
+    pub fn notEmpty(region: *Region32) bool {
+        return pixman_region32_not_empty(region) != 0;
+    }
 
     extern fn pixman_region32_extents(region: *Region32) *Box32;
     pub const extents = pixman_region32_extents;
@@ -314,10 +396,14 @@ pub const Region32 = extern struct {
     pub const rectangles = pixman_region32_rectangles;
 
     extern fn pixman_region32_equal(region1: *Region32, region2: *Region32) Bool;
-    pub const equal = pixman_region32_equal;
+    pub fn equal(region1: *Region32, region2: *Region32) bool {
+        return pixman_region32_equal(region1, region2) != 0;
+    }
 
     extern fn pixman_region32_selfcheck(region: *Region32) Bool;
-    pub const selfcheck = pixman_region32_selfcheck;
+    pub fn selfcheck(region: *Region32) bool {
+        return pixman_region32_selfcheck(region) != 0;
+    }
 
     extern fn pixman_region32_reset(region: *Region32, box: *Box32) void;
     pub const reset = pixman_region32_reset;
@@ -340,7 +426,35 @@ extern fn pixman_blt(
     width: c_int,
     height: c_int,
 ) Bool;
-pub const blt = pixman_blt;
+pub fn blt(
+    src_bits: [*]u32,
+    dst_bits: [*]u32,
+    src_stride: c_int,
+    dst_stride: c_int,
+    src_bpp: c_int,
+    dst_bpp: c_int,
+    src_x: c_int,
+    src_y: c_int,
+    dest_x: c_int,
+    dest_y: c_int,
+    width: c_int,
+    height: c_int,
+) bool {
+    return pixman_blt(
+        src_bits,
+        dst_bits,
+        src_stride,
+        dst_stride,
+        src_bpp,
+        dst_bpp,
+        src_x,
+        src_y,
+        dest_x,
+        dest_y,
+        width,
+        height,
+    ) != 0;
+}
 
 extern fn pixman_fill(
     bits: [*]u32,
@@ -352,7 +466,18 @@ extern fn pixman_fill(
     height: c_int,
     _xor: u32,
 ) Bool;
-pub const fill = pixman_fill;
+pub fn fill(
+    bits: [*]u32,
+    stride: c_int,
+    bpp: c_int,
+    x: c_int,
+    y: c_int,
+    width: c_int,
+    height: c_int,
+    _xor: u32,
+) bool {
+    return pixman_fill(bits, stride, bpp, x, y, width, height, _xor) != 0;
+}
 
 extern fn pixman_version() c_int;
 pub const version = pixman_version;
@@ -497,10 +622,14 @@ pub const FormatCode = extern enum {
     yv12 = format(12, kind.yv12, 0, 0, 0, 0),
 
     extern fn pixman_format_supported_destination(format: FormatCode) Bool;
-    pub const supportedDestination = pixman_format_supported_destination;
+    pub fn supportedDestination(format: FormatCode) bool {
+        return pixman_format_supported_destination(format) != 0;
+    }
 
     extern fn pixman_format_supported_source(format: FormatCode) Bool;
-    pub const supportedSource = pixman_format_supported_source;
+    pub fn supportedSource(format: FormatCode) bool {
+        return pixman_format_supported_source(format) != 0;
+    }
 };
 
 pub const Repeat = extern enum {
@@ -635,7 +764,9 @@ pub const Image = opaque {
     pub const ref = pixman_image_ref;
 
     extern fn pixman_image_unref(image: *Image) Bool;
-    pub const unref = pixman_image_unref;
+    pub fn unref(image: *Image) bool {
+        return pixman_image_unref(image) != 0;
+    }
 
     extern fn pixman_image_set_destroy_function(image: *Image, function: fn (*Image, ?*c_void) void, data: ?*c_void) void;
     pub const setDestroyFunction = pixman_image_set_destroy_function;
@@ -644,16 +775,24 @@ pub const Image = opaque {
     pub const getDestroyData = pixman_image_get_destroy_data;
 
     extern fn pixman_image_set_clip_region(image: *Image, region: *Region16) Bool;
-    pub const setClipRegion = pixman_image_set_clip_region;
+    pub fn setClipRegion(image: *Image, region: *Region16) bool {
+        return pixman_image_set_clip_region(image, region) != 0;
+    }
 
     extern fn pixman_image_set_clip_region32(image: *Image, region: *Region32) Bool;
-    pub const setClipRegion32 = pixman_image_set_clip_region32;
+    pub fn setClipRegion32(image: *Image, region: *Region32) bool {
+        return pixman_image_set_clip_region32(image, region) != 0;
+    }
 
     extern fn pixman_image_set_has_client_clip(image: *Image, client_clip: Bool) void;
-    pub const setHasClientClip = pixman_image_set_has_client_clip;
+    pub fn setHasClientClip(image: *Image, client_clip: bool) void {
+        pixman_image_set_has_client_clip(Image, @boolToInt(client_clip));
+    }
 
     extern fn pixman_image_set_transform(image: *Image, transform: *const Transform) Bool;
-    pub const setTransform = pixman_image_set_transform;
+    pub fn setTransform(image: *Image, transform: *const Transform) bool {
+        return pixman_image_set_transform(image, transform) != 0;
+    }
 
     extern fn pixman_image_set_repeat(image: *Image, repeat: Repeat) void;
     pub const setRepeat = pixman_image_set_repeat;
@@ -665,19 +804,27 @@ pub const Image = opaque {
     pub const setDitherOffset = pixman_image_set_dither_offset;
 
     extern fn pixman_image_set_filter(image: *Image, filter: Filter, filter_params: [*]const Fixed, n_filter_params: c_int) Bool;
-    pub const setFilter = pixman_image_set_filter;
+    pub fn setFilter(image: *Image, filter: Filter, filter_params: [*]const Fixed, n_filter_params: c_int) bool {
+        return pixman_image_set_filter(image, filter, filter_params, n_filter_params) != 0;
+    }
 
     extern fn pixman_image_set_source_clipping(image: *Image, source_clipping: Bool) void;
-    pub const setSourceClipping = pixman_image_set_source_clipping;
+    pub fn setSourceClipping(image: *Image, source_clipping: bool) void {
+        pixman_image_set_source_clipping(image, @boolToInt(source_clipping));
+    }
 
     extern fn pixman_image_set_alpha_map(image: *Image, alpha_map: ?*Image, x: i16, y: i16) void;
     pub const setAlphaMap = pixman_image_set_alpha_map;
 
     extern fn pixman_image_set_component_alpha(image: *Image, component_alpha: Bool) void;
-    pub const setComponentAlpha = pixman_image_set_component_alpha;
+    pub fn setComponentAlpha(image: *Image, component_alpha: bool) void {
+        pixman_image_set_component_alpha(image, @boolToInt(component_alpha));
+    }
 
     extern fn pixman_image_get_component_alpha(image: *Image) Bool;
-    pub const getComponentAlpha = pixman_image_get_component_alpha;
+    pub fn getComponentAlpha(image: *Image) bool {
+        return pixman_image_get_component_alpha(image) != 0;
+    }
 
     extern fn pixman_image_set_accessors(image: *Image, read_func: fn (src: *const c_void, size: c_int) u32, write_func: fn (dst: *c_void, value: u32, size: c_int) void) void;
     pub const setAccessors = pixman_image_set_accessors;
@@ -704,10 +851,14 @@ pub const Image = opaque {
     pub const getFormat = pixman_image_get_format;
 
     extern fn pixman_image_fill_rectangles(op: Op, image: *Image, color: *const Color, n_rects: c_int, rects: [*]const Rectangle16) Bool;
-    pub const fillRectangles = pixman_image_fill_rectangles;
+    pub fn fillRectangles(op: Op, image: *Image, color: *const Color, n_rects: c_int, rects: [*]const Rectangle16) bool {
+        return pixman_image_fill_rectangles(op, image, color, n_rects, rects) != 0;
+    }
 
     extern fn pixman_image_fill_boxes(op: Op, dest: *Image, color: *const Color, n_boxes: c_int, boxes: [*]const Box32) Bool;
-    pub const fillBoxes = pixman_image_fill_boxes;
+    pub fn fillBoxes(op: Op, dest: *Image, color: *const Color, n_boxes: c_int, boxes: [*]const Box32) bool {
+        return pixman_image_fill_boxes(op, dest, color, n_boxes, boxes) != 0;
+    }
 
     extern fn pixman_image_composite(op: Op, src: *Image, mask: ?*Image, dest: *Image, src_x: i16, src_y: i16, mask_x: i16, mask_y: i16, dest_x: i16, dest_y: i16, width: u16, height: u16) void;
     pub const composite = pixman_image_composite;
@@ -885,3 +1036,7 @@ extern fn pixman_composite_triangles(
     tris: [*c]const Triangle,
 ) void;
 pub const compositeTriangles = pixman_composite_triangles;
+
+test "" {
+    @import("std").testing.refAllDecls(@This());
+}
