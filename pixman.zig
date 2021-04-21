@@ -270,8 +270,12 @@ pub const Region16 = extern struct {
     extern fn pixman_region_n_rects(region: *Region16) c_int;
     pub const nRects = pixman_region_n_rects;
 
-    extern fn pixman_region_rectangles(region: *Region16, n_rects: *c_int) *Box16;
-    pub const rectangles = pixman_region_rectangles;
+    extern fn pixman_region_rectangles(region: *Region16, n_rects: *c_int) [*]Box16;
+    pub fn rectangles(region: *Region16) []Box16 {
+        var n_rects: c_int = undefined;
+        const rects = pixman_region_rectangles(region, &n_rects);
+        return rects[0..@intCast(usize, n_rects)];
+    }
 
     extern fn pixman_region_equal(region1: *Region16, region2: *Region16) Bool;
     pub fn equal(region1: *Region16, region2: *Region16) bool {
@@ -392,8 +396,12 @@ pub const Region32 = extern struct {
     extern fn pixman_region32_n_rects(region: *Region32) c_int;
     pub const nRects = pixman_region32_n_rects;
 
-    extern fn pixman_region32_rectangles(region: *Region32, n_rects: *c_int) *Box32;
-    pub const rectangles = pixman_region32_rectangles;
+    extern fn pixman_region32_rectangles(region: *Region32, n_rects: *c_int) [*]Box32;
+    pub fn rectangles(region: *Region32) []Box32 {
+        var n_rects: c_int = undefined;
+        const rects = pixman_region32_rectangles(region, &n_rects);
+        return rects[0..@intCast(usize, n_rects)];
+    }
 
     extern fn pixman_region32_equal(region1: *Region32, region2: *Region32) Bool;
     pub fn equal(region1: *Region32, region2: *Region32) bool {
