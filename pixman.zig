@@ -211,7 +211,7 @@ pub const Region16 = extern struct {
     pub const initFromImage = pixman_region_init_from_image;
 
     extern fn pixman_region_fini(region: *Region16) void;
-    pub const fini = pixman_region_fini;
+    pub const deinit = pixman_region_fini;
 
     extern fn pixman_region_translate(region: *Region16, x: c_int, y: c_int) void;
     pub const translate = pixman_region_translate;
@@ -337,7 +337,7 @@ pub const Region32 = extern struct {
     pub const initFromImage = pixman_region32_init_from_image;
 
     extern fn pixman_region32_fini(region: *Region32) void;
-    pub const fini = pixman_region32_fini;
+    pub const deinit = pixman_region32_fini;
 
     extern fn pixman_region32_translate(region: *Region32, x: c_int, y: c_int) void;
     pub const translate = pixman_region32_translate;
