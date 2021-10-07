@@ -1,10 +1,10 @@
 const Bool = c_int;
 
-pub const Fixed_32_32 = extern enum(i64) { _ };
-pub const Fixed_48_16 = extern enum(i64) { _ };
-pub const Fixed_1_31 = extern enum(u32) { _ };
-pub const Fixed_1_16 = extern enum(u32) { _ };
-pub const Fixed_16_16 = extern enum(i32) { _ };
+pub const Fixed_32_32 = enum(i64) { _ };
+pub const Fixed_48_16 = enum(i64) { _ };
+pub const Fixed_1_31 = enum(u32) { _ };
+pub const Fixed_1_16 = enum(u32) { _ };
+pub const Fixed_16_16 = enum(i32) { _ };
 pub const Fixed = Fixed_16_16;
 
 pub const PointFixed = extern struct {
@@ -161,7 +161,7 @@ pub const FTransform = extern struct {
     pub const initIdentity = pixman_f_transform_init_identity;
 };
 
-pub const RegionOverlap = extern enum {
+pub const RegionOverlap = enum(c_int) {
     out,
     in,
     part,
@@ -519,7 +519,7 @@ fn format(
     comptime g: u32,
     comptime b: u32,
 ) comptime_int {
-    return (bpp << 24) | (@as(u32, @enumToInt(_type)) << 16) |
+    return (bpp << 24) | (@enumToInt(_type) << 16) |
         (a << 12) | (r << 8) | (g << 4) | b;
 }
 
@@ -532,7 +532,7 @@ fn formatByte(
     comptime b: u32,
 ) comptime_int {
     return ((bpp >> 3) << 24) |
-        (3 << 22) | (@as(u32, @enumToInt(_type)) << 16) |
+        (3 << 22) | (@enumToInt(_type) << 16) |
         ((a >> 3) << 12) |
         ((r >> 3) << 8) |
         ((g >> 3) << 4) |
@@ -540,7 +540,7 @@ fn formatByte(
 }
 
 /// These are the PIXMAN_TYPE_FOO defines
-pub const Type = enum {
+pub const Type = enum(u32) {
     other = 0,
     a = 1,
     argb = 2,
@@ -555,7 +555,7 @@ pub const Type = enum {
     rgba_float = 11,
 };
 
-pub const FormatCode = extern enum {
+pub const FormatCode = enum(c_int) {
     // 128bpp formats
     rgba_float = formatByte(128, .rgba_float, 32, 32, 32, 32),
     // 96bpp formats
@@ -603,13 +603,13 @@ pub const FormatCode = extern enum {
     a2r2g2b2 = format(8, .argb, 2, 2, 2, 2),
     a2b2g2r2 = format(8, .abgr, 2, 2, 2, 2),
 
-    c8 = format(8, .color, 0, 0, 0, 0),
-    g8 = format(8, .gray, 0, 0, 0, 0),
+    c8 = format(8, .color, 0, 0, 0, 0), // also x4c4
+    g8 = format(8, .gray, 0, 0, 0, 0), // also x4g4
 
     x4a4 = format(8, .a, 4, 0, 0, 0),
 
-    x4c4 = format(8, .color, 0, 0, 0, 0),
-    x4g4 = format(8, .gray, 0, 0, 0, 0),
+    //x4c4 = format(8, .color, 0, 0, 0, 0), // see c8
+    //x4g4 = format(8, .gray, 0, 0, 0, 0), // see g8
 
     // 4bpp formats
     a4 = format(4, .a, 4, 0, 0, 0),
@@ -630,25 +630,25 @@ pub const FormatCode = extern enum {
     yuy2 = format(16, .yuy2, 0, 0, 0, 0),
     yv12 = format(12, .yv12, 0, 0, 0, 0),
 
-    extern fn pixman_format_supported_destination(format: FormatCode) Bool;
-    pub fn supportedDestination(format: FormatCode) bool {
-        return pixman_format_supported_destination(format) != 0;
+    extern fn pixman_format_supported_destination(_format: FormatCode) Bool;
+    pub fn supportedDestination(_format: FormatCode) bool {
+        return pixman_format_supported_destination(_format) != 0;
     }
 
-    extern fn pixman_format_supported_source(format: FormatCode) Bool;
-    pub fn supportedSource(format: FormatCode) bool {
-        return pixman_format_supported_source(format) != 0;
+    extern fn pixman_format_supported_source(_format: FormatCode) Bool;
+    pub fn supportedSource(_format: FormatCode) bool {
+        return pixman_format_supported_source(_format) != 0;
     }
 };
 
-pub const Repeat = extern enum {
+pub const Repeat = enum(c_int) {
     none,
     normal,
     pad,
     reflect,
 };
 
-pub const Dither = extern enum {
+pub const Dither = enum(c_int) {
     none,
     fast,
     good,
@@ -657,7 +657,7 @@ pub const Dither = extern enum {
     ordered_blue_noise_64,
 };
 
-pub const Filter = extern enum {
+pub const Filter = enum(c_int) {
     fast,
     good,
     best,
@@ -680,7 +680,7 @@ pub const Filter = extern enum {
     pub const createSeparableConvolution = pixman_filter_create_separable_convolution;
 };
 
-pub const Kernel = extern enum {
+pub const Kernel = enum(c_int) {
     impulse,
     box,
     linear,
@@ -691,7 +691,7 @@ pub const Kernel = extern enum {
     lanczos3_stretched,
 };
 
-pub const Op = extern enum {
+pub const Op = enum(c_int) {
     clear = 0x00,
     src = 0x01,
     dst = 0x02,
@@ -795,7 +795,7 @@ pub const Image = opaque {
 
     extern fn pixman_image_set_has_client_clip(image: *Image, client_clip: Bool) void;
     pub fn setHasClientClip(image: *Image, client_clip: bool) void {
-        pixman_image_set_has_client_clip(Image, @boolToInt(client_clip));
+        pixman_image_set_has_client_clip(image, @boolToInt(client_clip));
     }
 
     extern fn pixman_image_set_transform(image: *Image, transform: *const Transform) Bool;
@@ -896,10 +896,10 @@ pub const Glyph = extern struct {
     y: c_int,
     glyph: ?*const c_void,
 
-    extern fn pixman_glyph_get_extents(cache: ?*GlyphCache, n_glyphs: c_int, glyphs: [*]pixman_glyph_t, extents: [*]pixman_box32_t) void;
+    extern fn pixman_glyph_get_extents(cache: ?*GlyphCache, n_glyphs: c_int, glyphs: [*]Glyph, extents: [*]Box32) void;
     pub const getExtents = pixman_glyph_get_extents;
 
-    extern fn pixman_glyph_get_mask_format(cache: ?*GlyphCache, n_glyphs: c_int, glyphs: [*]const pixman_glyph_t) FormatCode;
+    extern fn pixman_glyph_get_mask_format(cache: ?*GlyphCache, n_glyphs: c_int, glyphs: [*]const Glyph) FormatCode;
     pub const getMaskFormat = pixman_glyph_get_mask_format;
 };
 
