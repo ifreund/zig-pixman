@@ -251,8 +251,8 @@ pub const Region16 = extern struct {
         return pixman_region_inverse(new_reg, reg1, inv_rect) != 0;
     }
 
-    extern fn pixman_region_contains_point(region: *Region16, x: c_int, y: c_int, box: *Box16) Bool;
-    pub fn containsPoint(region: *Region16, x: c_int, y: c_int, box: *Box16) bool {
+    extern fn pixman_region_contains_point(region: *Region16, x: c_int, y: c_int, box: ?*Box16) Bool;
+    pub fn containsPoint(region: *Region16, x: c_int, y: c_int, box: ?*Box16) bool {
         return pixman_region_contains_point(region, x, y, box) != 0;
     }
 
@@ -377,8 +377,8 @@ pub const Region32 = extern struct {
         return pixman_region32_inverse(new_reg, reg1, inv_rect) != 0;
     }
 
-    extern fn pixman_region32_contains_point(region: *Region32, x: c_int, y: c_int, box: *Box32) Bool;
-    pub fn containsPoint(region: *Region32, x: c_int, y: c_int, box: *Box32) bool {
+    extern fn pixman_region32_contains_point(region: *Region32, x: c_int, y: c_int, box: ?*Box32) Bool;
+    pub fn containsPoint(region: *Region32, x: c_int, y: c_int, box: ?*Box32) bool {
         return pixman_region32_contains_point(region, x, y, box) != 0;
     }
 
