@@ -777,10 +777,10 @@ pub const Image = opaque {
         return pixman_image_unref(image) != 0;
     }
 
-    extern fn pixman_image_set_destroy_function(image: *Image, function: fn (*Image, ?*c_void) void, data: ?*c_void) void;
+    extern fn pixman_image_set_destroy_function(image: *Image, function: fn (*Image, ?*anyopaque) void, data: ?*anyopaque) void;
     pub const setDestroyFunction = pixman_image_set_destroy_function;
 
-    extern fn pixman_image_get_destroy_data(image: *Image) ?*c_void;
+    extern fn pixman_image_get_destroy_data(image: *Image) ?*anyopaque;
     pub const getDestroyData = pixman_image_get_destroy_data;
 
     extern fn pixman_image_set_clip_region(image: *Image, region: *Region16) Bool;
@@ -835,7 +835,7 @@ pub const Image = opaque {
         return pixman_image_get_component_alpha(image) != 0;
     }
 
-    extern fn pixman_image_set_accessors(image: *Image, read_func: fn (src: *const c_void, size: c_int) u32, write_func: fn (dst: *c_void, value: u32, size: c_int) void) void;
+    extern fn pixman_image_set_accessors(image: *Image, read_func: fn (src: *const anyopaque, size: c_int) u32, write_func: fn (dst: *anyopaque, value: u32, size: c_int) void) void;
     pub const setAccessors = pixman_image_set_accessors;
 
     extern fn pixman_image_set_indexed(image: *Image, indexed: *const Indexed) void;
@@ -894,7 +894,7 @@ pub const Image = opaque {
 pub const Glyph = extern struct {
     x: c_int,
     y: c_int,
-    glyph: ?*const c_void,
+    glyph: ?*const anyopaque,
 
     extern fn pixman_glyph_get_extents(cache: ?*GlyphCache, n_glyphs: c_int, glyphs: [*]Glyph, extents: [*]Box32) void;
     pub const getExtents = pixman_glyph_get_extents;
@@ -916,13 +916,13 @@ pub const GlyphCache = opaque {
     extern fn pixman_glyph_cache_thaw(cache: *GlyphCache) void;
     pub const thaw = pixman_glyph_cache_thaw;
 
-    extern fn pixman_glyph_cache_lookup(cache: *GlyphCache, font_key: ?*c_void, glyph_key: ?*c_void) ?*const c_void;
+    extern fn pixman_glyph_cache_lookup(cache: *GlyphCache, font_key: ?*anyopaque, glyph_key: ?*anyopaque) ?*const anyopaque;
     pub const lookup = pixman_glyph_cache_lookup;
 
-    extern fn pixman_glyph_cache_insert(cache: *GlyphCache, font_key: ?*c_void, glyph_key: ?*c_void, origin_x: c_int, origin_y: c_int, glyph_image: *Image) ?*const c_void;
+    extern fn pixman_glyph_cache_insert(cache: *GlyphCache, font_key: ?*anyopaque, glyph_key: ?*anyopaque, origin_x: c_int, origin_y: c_int, glyph_image: *Image) ?*const anyopaque;
     pub const insert = pixman_glyph_cache_insert;
 
-    extern fn pixman_glyph_cache_remove(cache: *GlyphCache, font_key: ?*c_void, glyph_key: ?*c_void) void;
+    extern fn pixman_glyph_cache_remove(cache: *GlyphCache, font_key: ?*anyopaque, glyph_key: ?*anyopaque) void;
     pub const remove = pixman_glyph_cache_remove;
 };
 
