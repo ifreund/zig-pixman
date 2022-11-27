@@ -777,7 +777,7 @@ pub const Image = opaque {
         return pixman_image_unref(image) != 0;
     }
 
-    extern fn pixman_image_set_destroy_function(image: *Image, function: fn (*Image, ?*anyopaque) void, data: ?*anyopaque) void;
+    extern fn pixman_image_set_destroy_function(image: *Image, function: *const fn (*Image, ?*anyopaque) void, data: ?*anyopaque) void;
     pub const setDestroyFunction = pixman_image_set_destroy_function;
 
     extern fn pixman_image_get_destroy_data(image: *Image) ?*anyopaque;
@@ -835,7 +835,7 @@ pub const Image = opaque {
         return pixman_image_get_component_alpha(image) != 0;
     }
 
-    extern fn pixman_image_set_accessors(image: *Image, read_func: fn (src: *const anyopaque, size: c_int) u32, write_func: fn (dst: *anyopaque, value: u32, size: c_int) void) void;
+    extern fn pixman_image_set_accessors(image: *Image, read_func: *const fn (src: *const anyopaque, size: c_int) u32, write_func: *const fn (dst: *anyopaque, value: u32, size: c_int) void) void;
     pub const setAccessors = pixman_image_set_accessors;
 
     extern fn pixman_image_set_indexed(image: *Image, indexed: *const Indexed) void;
@@ -991,7 +991,7 @@ pub const Trapezoid = extern struct {
     pub fn valid(t: Trapezoid) bool {
         return t.left.p1.y != t.left.p2.y and
             t.right.p1.y != t.right.p2.y and
-            t.bottom > t.top;
+            @enumToInt(t.bottom) > @enumToInt(t.top);
     }
 };
 
@@ -1046,6 +1046,6 @@ extern fn pixman_composite_triangles(
 ) void;
 pub const compositeTriangles = pixman_composite_triangles;
 
-test "" {
-    @import("std").testing.refAllDecls(@This());
+test {
+    @import("std").testing.refAllDeclsRecursive(@This());
 }
