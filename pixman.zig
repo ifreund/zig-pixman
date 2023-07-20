@@ -274,7 +274,7 @@ pub const Region16 = extern struct {
     pub fn rectangles(region: *Region16) []Box16 {
         var n_rects: c_int = undefined;
         const rects = pixman_region_rectangles(region, &n_rects);
-        return rects[0..@intCast(usize, n_rects)];
+        return rects[0..@intCast(n_rects)];
     }
 
     extern fn pixman_region_equal(region1: *Region16, region2: *Region16) Bool;
@@ -400,7 +400,7 @@ pub const Region32 = extern struct {
     pub fn rectangles(region: *Region32) []Box32 {
         var n_rects: c_int = undefined;
         const rects = pixman_region32_rectangles(region, &n_rects);
-        return rects[0..@intCast(usize, n_rects)];
+        return rects[0..@intCast(n_rects)];
     }
 
     extern fn pixman_region32_equal(region1: *Region32, region2: *Region32) Bool;
@@ -519,7 +519,7 @@ fn format(
     comptime g: u32,
     comptime b: u32,
 ) comptime_int {
-    return (bpp << 24) | (@enumToInt(_type) << 16) |
+    return (bpp << 24) | (@intFromEnum(_type) << 16) |
         (a << 12) | (r << 8) | (g << 4) | b;
 }
 
@@ -532,7 +532,7 @@ fn formatByte(
     comptime b: u32,
 ) comptime_int {
     return ((bpp >> 3) << 24) |
-        (3 << 22) | (@enumToInt(_type) << 16) |
+        (3 << 22) | (@intFromEnum(_type) << 16) |
         ((a >> 3) << 12) |
         ((r >> 3) << 8) |
         ((g >> 3) << 4) |
@@ -795,7 +795,7 @@ pub const Image = opaque {
 
     extern fn pixman_image_set_has_client_clip(image: *Image, client_clip: Bool) void;
     pub fn setHasClientClip(image: *Image, client_clip: bool) void {
-        pixman_image_set_has_client_clip(image, @boolToInt(client_clip));
+        pixman_image_set_has_client_clip(image, @intFromBool(client_clip));
     }
 
     extern fn pixman_image_set_transform(image: *Image, transform: *const Transform) Bool;
@@ -819,7 +819,7 @@ pub const Image = opaque {
 
     extern fn pixman_image_set_source_clipping(image: *Image, source_clipping: Bool) void;
     pub fn setSourceClipping(image: *Image, source_clipping: bool) void {
-        pixman_image_set_source_clipping(image, @boolToInt(source_clipping));
+        pixman_image_set_source_clipping(image, @intFromBool(source_clipping));
     }
 
     extern fn pixman_image_set_alpha_map(image: *Image, alpha_map: ?*Image, x: i16, y: i16) void;
@@ -827,7 +827,7 @@ pub const Image = opaque {
 
     extern fn pixman_image_set_component_alpha(image: *Image, component_alpha: Bool) void;
     pub fn setComponentAlpha(image: *Image, component_alpha: bool) void {
-        pixman_image_set_component_alpha(image, @boolToInt(component_alpha));
+        pixman_image_set_component_alpha(image, @intFromBool(component_alpha));
     }
 
     extern fn pixman_image_get_component_alpha(image: *Image) Bool;
@@ -991,7 +991,7 @@ pub const Trapezoid = extern struct {
     pub fn valid(t: Trapezoid) bool {
         return t.left.p1.y != t.left.p2.y and
             t.right.p1.y != t.right.p2.y and
-            @enumToInt(t.bottom) > @enumToInt(t.top);
+            @intFromEnum(t.bottom) > @intFromEnum(t.top);
     }
 };
 
