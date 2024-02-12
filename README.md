@@ -5,7 +5,7 @@
 nicer to use than the output of `zig translate-c`.
 
 The main repository is on [codeberg](https://codeberg.org/ifreund/zig-pixman),
-this is where the issue tracker may be found and where contributions are accepted.
+which is where the issue tracker may be found and where contributions are accepted.
 
 Read-only mirrors exist on [sourcehut](https://git.sr.ht/~ifreund/zig-pixman)
 and [github](https://github.com/ifreund/zig-pixman).
