@@ -1,0 +1,11 @@
+.{
+    .name = "zig-pixman",
+    .version = "0.1.0-dev",
+    .paths = .{
+        "build.zig",
+        "build.zig.zon",
+        "pixman.zig",
+        "LICENSE",
+    },
+    .dependencies = .{},
+}
