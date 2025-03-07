@@ -265,7 +265,8 @@ pub const Region16 = extern struct {
     }
 
     extern fn pixman_region_extents(region: *Region16) *Box16;
-    pub const extents = pixman_region_extents;
+    // Conflicts with the extents struct field, just access the field directly.
+    //pub const extents = pixman_region_extents;
 
     extern fn pixman_region_n_rects(region: *Region16) c_int;
     pub const nRects = pixman_region_n_rects;
@@ -391,7 +392,8 @@ pub const Region32 = extern struct {
     }
 
     extern fn pixman_region32_extents(region: *Region32) *Box32;
-    pub const extents = pixman_region32_extents;
+    // Conflicts with the extents struct field, just access the field directly.
+    //pub const extents = pixman_region32_extents;
 
     extern fn pixman_region32_n_rects(region: *Region32) c_int;
     pub const nRects = pixman_region32_n_rects;
@@ -777,7 +779,7 @@ pub const Image = opaque {
         return pixman_image_unref(image) != 0;
     }
 
-    extern fn pixman_image_set_destroy_function(image: *Image, function: *const fn (*Image, ?*anyopaque) void, data: ?*anyopaque) void;
+    extern fn pixman_image_set_destroy_function(image: *Image, function: *const fn (*Image, ?*anyopaque) callconv(.c) void, data: ?*anyopaque) void;
     pub const setDestroyFunction = pixman_image_set_destroy_function;
 
     extern fn pixman_image_get_destroy_data(image: *Image) ?*anyopaque;
@@ -835,7 +837,11 @@ pub const Image = opaque {
         return pixman_image_get_component_alpha(image) != 0;
     }
 
-    extern fn pixman_image_set_accessors(image: *Image, read_func: *const fn (src: *const anyopaque, size: c_int) u32, write_func: *const fn (dst: *anyopaque, value: u32, size: c_int) void) void;
+    extern fn pixman_image_set_accessors(
+        image: *Image,
+        read_func: *const fn (src: *const anyopaque, size: c_int) callconv(.c) u32,
+        write_func: *const fn (dst: *anyopaque, value: u32, size: c_int) callconv(.c) void,
+    ) void;
     pub const setAccessors = pixman_image_set_accessors;
 
     extern fn pixman_image_set_indexed(image: *Image, indexed: *const Indexed) void;

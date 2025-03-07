@@ -1,6 +1,6 @@
 # zig-pixman
 
-[zig](https://ziglang.org/) 0.13 bindings for
+[zig](https://ziglang.org/) 0.14 bindings for
 [pixman](https://gitlab.freedesktop.org/pixman/pixman) that are a little
 nicer to use than the output of `zig translate-c`.
 
