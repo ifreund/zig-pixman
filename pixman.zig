@@ -756,13 +756,13 @@ pub const Image = opaque {
     extern fn pixman_image_create_solid_fill(color: *const Color) ?*Image;
     pub const createSolidFill = pixman_image_create_solid_fill;
 
-    extern fn pixman_image_create_linear_gradient(p1: *const PointFixed, p2: *const PointFixed, stops: *const GradientStop, n_stops: c_int) ?*Image;
+    extern fn pixman_image_create_linear_gradient(p1: *const PointFixed, p2: *const PointFixed, stops: [*]const GradientStop, n_stops: c_int) ?*Image;
     pub const createLinearGradient = pixman_image_create_linear_gradient;
 
-    extern fn pixman_image_create_radial_gradient(inner: *const PointFixed, outer: *const PointFixed, inner_radius: Fixed, outer_radius: Fixed, stops: *const GradientStop, n_stops: c_int) ?*Image;
+    extern fn pixman_image_create_radial_gradient(inner: *const PointFixed, outer: *const PointFixed, inner_radius: Fixed, outer_radius: Fixed, stops: [*]const GradientStop, n_stops: c_int) ?*Image;
     pub const createRadialGradient = pixman_image_create_radial_gradient;
 
-    extern fn pixman_image_create_conical_gradient(center: *const PointFixed, angle: Fixed, stops: *const GradientStop, n_stops: c_int) ?*Image;
+    extern fn pixman_image_create_conical_gradient(center: *const PointFixed, angle: Fixed, stops: [*]const GradientStop, n_stops: c_int) ?*Image;
     pub const createConicalGradient = pixman_image_create_conical_gradient;
 
     extern fn pixman_image_create_bits(format: FormatCode, width: c_int, height: c_int, bits: ?[*]u32, rowstride_bytes: c_int) ?*Image;
