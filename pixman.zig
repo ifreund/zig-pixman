@@ -521,7 +521,7 @@ fn format(
     comptime g: u32,
     comptime b: u32,
 ) comptime_int {
-    return (bpp << 24) | (@intFromEnum(_type) << 16) |
+    return (bpp << 24) | (@backingInt(_type) << 16) |
         (a << 12) | (r << 8) | (g << 4) | b;
 }
 
@@ -534,7 +534,7 @@ fn formatByte(
     comptime b: u32,
 ) comptime_int {
     return ((bpp >> 3) << 24) |
-        (3 << 22) | (@intFromEnum(_type) << 16) |
+        (3 << 22) | (@backingInt(_type) << 16) |
         ((a >> 3) << 12) |
         ((r >> 3) << 8) |
         ((g >> 3) << 4) |
@@ -997,7 +997,7 @@ pub const Trapezoid = extern struct {
     pub fn valid(t: Trapezoid) bool {
         return t.left.p1.y != t.left.p2.y and
             t.right.p1.y != t.right.p2.y and
-            @intFromEnum(t.bottom) > @intFromEnum(t.top);
+            @backingInt(t.bottom) > @backingInt(t.top);
     }
 };
 
@@ -1053,5 +1053,19 @@ extern fn pixman_composite_triangles(
 pub const compositeTriangles = pixman_composite_triangles;
 
 test {
-    @import("std").testing.refAllDeclsRecursive(@This());
+    @setEvalBranchQuota(4000);
+    refAllDeclsRecursive(@This());
+}
+
+fn refAllDeclsRecursive(comptime T: type) void {
+    const std = @import("std");
+    inline for (comptime std.meta.declarations(T)) |decl| {
+        if (@TypeOf(@field(T, decl)) == type) {
+            switch (@typeInfo(@field(T, decl))) {
+                .@"struct", .@"enum", .@"union", .@"opaque" => refAllDeclsRecursive(@field(T, decl)),
+                else => {},
+            }
+        }
+        _ = &@field(T, decl);
+    }
 }
